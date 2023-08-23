@@ -1,20 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import HomePage from "./screens/HomePage";
 
-export default function App() {
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+const Stack = createNativeStackNavigator();
+
+const App = () => {
+  const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
+  const [fontsLoaded, error] = useFonts({
+    "Inter-ExtraBold": require("./assets/fonts/Inter-ExtraBold.ttf"),
+  });
+
+  if (!fontsLoaded && !error) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <NavigationContainer>
+        {hideSplashScreen ? (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="HomePage"
+              component={HomePage}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        ) : null}
+      </NavigationContainer>
+    </>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
+export default App;
